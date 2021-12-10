@@ -121,14 +121,20 @@ end
 
 function tests:sepBy1Fail()
     local parser = P.sepBy1(P.match(","), P.match("[A-Za-z]+"))
-    local result = parser:parse("")
-    assert(result[1] == "a" and result[2] == "b" and result[3] == "c" and result[4] == nil)
+    local result = parser:tryParse("")
+    assert(not result)
 end
 
 function tests:value()
     local parser = (P.match("true") >> P.value(true)) + (P.match("false") >> P.value(false))
     assert(parser:parse("true") == true)
     assert(parser:parse("false") == false)
+end
+
+function tests:map()
+    local parser = P.match("[A-Za-z]+")
+    local mappedParser = parser:map(function(v) return #v end)
+    assert(mappedParser:parse("hello") == 5)
 end
 local failures = {}
 

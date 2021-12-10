@@ -129,7 +129,7 @@ do -- Define Parser wrapper
         return Parser.new(
             function(input)
                 local remainder, result = self.parseFunc(input)
-                return remainder, result:map(input)
+                return remainder, result:map(f)
             end
         )
     end
@@ -337,7 +337,7 @@ do -- Define simple parsers and combinators
     function P.sepBy1(separator, content)
         return content:chain(
             function (result)
-                P.many(
+                return separator / P.many(
                     content:left(P.optional(separator))
                 ):map(
                     function(data)
