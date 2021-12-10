@@ -229,7 +229,7 @@ do -- Define simple parsers and combinators
     end
 
     function P.charPred(description, predicate)
-        return try(P.any:chain(function(value)
+        return P.try(P.any:chain(function(value)
             if predicate(value) then
                 return Either.right(value)
             else
@@ -288,7 +288,7 @@ do -- Define simple parsers and combinators
             function(input)
                 result, value = parser.parseFunc(input)
                 if value:isRight() then
-                    extraResults = many(parser):parse(input)
+                    extraResults = P.many(parser):parse(input)
                     table.insert(extraResults, 1, result)
                 end
             end
