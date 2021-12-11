@@ -9,4 +9,4 @@ This project is licensed under LGPL v2.1. This means (roughly) that should you m
 Please make a ticket before making a merge request. This library should remain small, dependency-less, and compatible with Lua 5.1+ and Roblox Luau. All MRs should be linked to a ticket. Tickets take priority in the order of: bugs fixes, making tests, simplification, and finally new features.
 
 # Documentation
-## TODO
+See [Wiki](https://github.com/RegularTetragon/microparsel/wiki)
