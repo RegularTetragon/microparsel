@@ -64,4 +64,4 @@ local json = language {
     end
 }
 
-return json
+return json:value()
