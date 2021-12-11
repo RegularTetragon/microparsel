@@ -7,6 +7,13 @@ function tests:any()
     assert(P.any:parse("abc") == "a")
 end
 
+function tests:anyInner()
+    local remainder, result, consumed = P.any.parseFunc("abc")
+    assert(result:unwrap() == "a")
+    assert(remainder == "bc")
+    assert(consumed == 1)
+end
+
 function tests:empty()
     assert(P.empty:parse("abc") == nil)
 end
@@ -20,21 +27,43 @@ function tests:anyFail()
     assert (not success)
 end
 
+function tests:pattern()
+    local success, message = P.match("abc"):tryParse("abcdefg")
+    assert (message == "abc")
+end
+
+
+function tests:pattern2()
+    local success, message = P.match("abcd"):tryParse("abcdefg")
+    assert (message == "abcd")
+end
+
 function tests:endOfStreamFail()
     local success, message = pcall(function()P.endOfStream:parse("abc")end)
     assert (not success)
 end
 
 function tests:chain()
-    P.any:chain(
+    local result = P.any:chain(
         function(a)
-            return P.empty
+            return P.empty:result(a)
         end
     ):parse("b")
+    assert (result == "b")
+end
+
+function tests:chain2()
+    local result = P.any:chain(
+        function(a)
+            return P.match(a)
+        end
+    ):parse("bb")
+    assert (result == "b")
 end
 
 function tests:parserRight()
-    assert(P.any:right(P.any):parse("ab") == "b")
+    local result = P.any:right(P.any):parse("ab")
+    assert(result == "b")
 end
 
 function tests:parserRightRFail()
@@ -136,6 +165,7 @@ function tests:map()
     local mappedParser = parser:map(function(v) return #v end)
     assert(mappedParser:parse("hello") == 5)
 end
+
 local failures = {}
 
 for k, test in pairs(tests) do
